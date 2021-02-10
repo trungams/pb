@@ -4,6 +4,7 @@
 #include <vector>
 
 #include <pybind11/embed.h>
+#include <pybind11/numpy.h>
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
 
@@ -16,12 +17,20 @@ public:
   PyModuleWrapper() {}
 
   int execute(const CustomData &data) {
-    py::scoped_interpreter guard;
     // load the .so module to include the definitions
     py::module datamod = py::module_::import("src.pyembed.datamodule");
     py::module pymod = py::module_::import("src.pyembed.mod");
     py::object obj = pymod.attr("MyModule")();
     py::object input = py::cast(&data);
     return obj.attr("execute")(input).cast<int>();
+  }
+
+  Int64Matrix multiply_matrices(const Int64Matrix &a, const Int64Matrix &b) {
+    py::module datamod = py::module_::import("src.pyembed.datamodule");
+    py::module pymod = py::module_::import("src.pyembed.mod");
+    py::object obj = pymod.attr("MyModule")();
+    py::object m_a = py::cast(&a);
+    py::object m_b = py::cast(&b);
+    return obj.attr("multiply_matrices")(m_a, m_b).cast<Int64Matrix>();
   }
 };
