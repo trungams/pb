@@ -31,6 +31,11 @@ public:
     py::object obj = pymod.attr("MyModule")();
     py::object m_a = py::cast(&a);
     py::object m_b = py::cast(&b);
-    return obj.attr("multiply_matrices")(m_a, m_b).cast<Int64Matrix>();
+    // call the function and retrieve the result as a python object
+    py::object prod = obj.attr("multiply_matrices")(m_a, m_b);
+    // print the result using the interpreter
+    py::print("multiply_matrices result as received in C++:");
+    py::print(prod);
+    return prod.cast<Int64Matrix>();
   }
 };

@@ -35,5 +35,10 @@ PYBIND11_MODULE(datamodule, m) {
                                py::format_descriptor<int64_t>::format(), 2,
                                {m.rows(), m.cols()},
                                {sizeof(int64_t) * m.cols(), sizeof(int64_t)});
+      })
+      .def("__str__", [](const Int64Matrix &m) {
+        std::stringstream ss;
+        ss << m;
+        return ss.str();
       });
 }
